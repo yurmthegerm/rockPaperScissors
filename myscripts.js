@@ -1,3 +1,6 @@
+const buttons = document.querySelectorAll('button');
+let result = 0;
+
 function getComputerChoice () {
     let num = Math.floor(Math.random()*3);
     switch (num) {
@@ -21,19 +24,34 @@ function firstUpper (word) {
     }
 }
 
+function disable () {
+    buttons.forEach(btn => {
+        btn.disabled = true;
+    });
+}
+
 function playRound (playerSelection, computerSelection) {
     let player = firstUpper(playerSelection);
     let com = firstUpper(computerSelection);
-    let result = 0
+    let output = '';
     if (player === com) {
-        console.log(`You Tie! ${player} and ${com} is a draw`);
+        output = `You Tie! ${player} and ${com} is a draw`;
     } else if ((player === 'Rock' && com === 'Paper') || (player === 'Paper' && com === 'Scissors') || (player === 'Scissors' && com === 'Rock')) {
-        console.log(`You Lose! ${com} beats ${player}`);
-        result = -1;
+        output = `You Lose! ${com} beats ${player}`;
+        result --;
     } else {
-        console.log(`You Win! ${player} beats ${com}`);
-        result = 1;
+        output = `You Win! ${player} beats ${com}`;
+        result ++;
     }
+
+    if (result == 5) {
+        output = 'You have won the game! Congratulations!';
+        disable();
+    } else if (result == -5) {
+        output = 'You have lost...';
+        disable();
+    }
+    document.getElementById('output').innerText = output;
     return result;
 }
 
@@ -56,4 +74,11 @@ function game() {
     } 
 }
 
-console.log(game());
+//console.log(game());
+
+buttons.forEach(button => {
+    button.addEventListener('click', function(){
+        playRound(button.value, getComputerChoice());
+    })
+});
+
